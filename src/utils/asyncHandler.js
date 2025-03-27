@@ -1,8 +1,9 @@
 //Method 1:to write the asyncHandler function
  const asyncHandler =(requestHandler)=>{//here requestHandler is a function passed from index.js
-     (req ,res,next)=>{
+   return (req ,res,next)=>{
         Promise.resolve(requestHandler(req,res,next)).catch((err)=> next(err))
      }
+
  }
 
 
@@ -22,3 +23,5 @@
 //         })
 //      }
 // }
+
+export {asyncHandler}

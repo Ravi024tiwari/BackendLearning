@@ -6,3 +6,5 @@ class ApiResponse {
         this.success =statusCode < 400 //learn statusCode for different response of req
     }
 }
+
+export {ApiResponse}

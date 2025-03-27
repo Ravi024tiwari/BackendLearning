@@ -1,4 +1,3 @@
-import { type } from "express/lib/response";
 import mongoose, { Schema } from "mongoose";
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
@@ -25,11 +24,12 @@ const userSchema =new mongoose.Schema({
         trim:true,
         index:true,
     },
+    //pahle server par upload karenge then uska localpath lenge then upload on cloudnary and store on DB
     avatar:{
       type:String,//cloundnary url of images Url
       required:true,
     },
-    coverImage :{
+    coverImage :{//its not required on Database//its image url
         type:String,
     },
     watchHistory:[//its store the id of those video which we watch in array of objects 
@@ -51,7 +51,7 @@ const userSchema =new mongoose.Schema({
 )
 
 
-
+//everytime before the ends of this models documents//check the password modified
 userSchema.pre("save", async function (next) {//this is a prehook which take a callback to use schema
     if(!this.isModified("password")) return next();//this for save//if password not modified then return 
     //otherwise the password always change on changing any documents on Schema
@@ -60,7 +60,8 @@ userSchema.pre("save", async function (next) {//this is a prehook which take a c
     next()//after this middleware goto another middleware
 })
 
-userSchema.methods.isPasswordCorrect = async function(password){
+//methods are defined by users//developers
+userSchema.methods.isPasswordCorrect = async function(password){//here passwrd whose user send this
     return await bcrypt.compare(password, this.password)//bcrypt compare the encypt password with "password" which pass in string and return bool rturn type
 }
 
@@ -74,7 +75,7 @@ userSchema.methods.generateAccessToken = function(){
         },
         process.env.ACCESS_TOKEN_SECRET,//this is access token given to userSchema
         {
-            expiresIn: process.env.ACCESS_TOKEN_EXPIRY
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRY,
         }
     )
 }
